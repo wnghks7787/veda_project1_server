@@ -35,28 +35,28 @@ bool LoginModule::isAdmin()
     }
 }
 
-bool LoginModule::isUser()
+/**
+ * @brief 로그인을 시도하며 json 정보를 전달.
+ * @return Json을 통한 유저 정보
+ */
+QJsonObject LoginModule::login()
 {
-    return true;
-}
+    QJsonObject res= findUser();
 
-int LoginModule::login()
-{
-    if(checkLoginValidate())
+    if(res["success"].toBool())
     {
-        if(isAdmin())
+        QJsonObject user = res["user"].toObject();
+
+        if(user["id"] == "admin")
         {
             loginWithAdmin();
-            return 1;
         }
-        else if(isUser())
+        else
         {
             loginWithUser();
-            return 2;
         }
     }
-
-    return -1;
+    return res;
 }
 
 void LoginModule::loginWithAdmin()
@@ -70,23 +70,28 @@ void LoginModule::loginWithUser()
 }
 
 /**
- * @brief 로그인이 가능한지 확인하는 로직.
- * @return 로그인 정보가 있으면 true, 없으면 false 반환
+ * @brief id와 pw에 맞는 유저를 찾는 로직.
+ * @return success 여부와 user 정보
  */
-bool LoginModule::checkLoginValidate()
+QJsonObject LoginModule::findUser()
 {
+    QJsonObject empty;
+    empty["success"] = false;
+
     QFile file("user.json");
     if(!file.open(QIODevice::ReadOnly))
     {
         qDebug() << "파일 열기 실패";
+        return empty;
     }
 
     QByteArray data = file.readAll();
-
     QJsonDocument doc = QJsonDocument::fromJson(data);
-
     QJsonArray users = doc.array();
 
+
+    // 각각을 돌며 유저를 찾는 로직
+    // Admin일 경우 특정 값을 더 보내주도록 하자.
     for(const QJsonValue &value: users)
     {
         QJsonObject user = value.toObject();
@@ -101,8 +106,13 @@ bool LoginModule::checkLoginValidate()
 
         if(id == json_id && pw == json_pw)
         {
-            return true;
+            QJsonObject res;
+            res["success"] = true;
+            res["user"] = user;
+            return res;
         }
     }
-    return false;
+
+    empty["message"] = "id/pw not matched";
+    return empty;
 }

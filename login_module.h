@@ -2,6 +2,7 @@
 #define LOGIN_MODULE_H
 
 #include <QString>
+#include <QJsonObject>
 
 class LoginModule
 {
@@ -9,9 +10,9 @@ public:
     LoginModule(QString id, QString pw);
 
     bool isAdmin();
-    bool isUser();
 
-    int login();
+    QJsonObject login();
+    QJsonObject findUser();
 
 private:
     QString id;

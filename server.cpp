@@ -53,25 +53,24 @@ void Server::onReadyRead()
 
     if(type == "login")
     {
-        int login_success = onLogin(obj);
+        QJsonObject login_info = onLogin(obj);
 
         response["type"] = "login";
-        if(login_success > 0)
+        if(login_info["success"].toBool())
         {
             response["success"] = true;
-            response["msg"] = "로그인 성공";
+            response["user"] = login_info["user"];
         }
         else
         {
-            response["success"] =false;
-            response["msg"] = "로그인 실패";
+            response["success"] = false;
         }
     }
 
     socket->write(QJsonDocument(response).toJson());
 }
 
-int Server::onLogin(QJsonObject obj)
+QJsonObject Server::onLogin(QJsonObject obj)
 {
     QString id = obj["id"].toString();
     QString pw = obj["password"].toString();

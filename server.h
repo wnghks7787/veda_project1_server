@@ -14,7 +14,7 @@ public:
 
     bool startServer(int port = 12345);
 
-    int onLogin(QJsonObject obj);
+    QJsonObject onLogin(QJsonObject obj);
 
 protected:
     void incomingConnection(qintptr socketDescriptor);
