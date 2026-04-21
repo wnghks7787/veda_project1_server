@@ -99,10 +99,6 @@ QJsonObject LoginModule::findUser()
         QString json_id = user["id"].toString();
         QString json_pw = user["info"].toObject()["password"].toString();
 
-        qDebug() << "id: " << json_id;
-        qDebug() << "pw: " << json_pw;
-        qDebug() << "your id: " << id;
-        qDebug() << "your pw: " << pw;
 
         if(id == json_id && pw == json_pw)
         {

@@ -66,6 +66,10 @@ void Server::onReadyRead()
             response["success"] = false;
         }
     }
+    else if(type == "withdraw")
+    {
+        qDebug() << "withdraw";
+    }
 
     socket->write(QJsonDocument(response).toJson());
 }
