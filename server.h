@@ -1,0 +1,32 @@
+#ifndef SERVER_H
+#define SERVER_H
+
+#include <QtNetwork/QTcpServer>
+#include <QtNetwork/QTcpSocket>
+
+#include <QJsonObject>
+
+class Server : public QTcpServer
+{
+    Q_OBJECT
+public:
+    explicit Server(QObject* parent = nullptr);
+
+    bool startServer(int port = 12345);
+
+    int onLogin(QJsonObject obj);
+
+protected:
+    void incomingConnection(qintptr socketDescriptor);
+
+private:
+    QTcpSocket* socket;
+
+private slots:
+    void onReadyRead();
+    void onDisconnected();
+
+
+};
+
+#endif // SERVER_H
