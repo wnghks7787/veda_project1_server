@@ -1,6 +1,7 @@
 #include "server.h"
 
 #include "login_module.h"
+#include "user_module.h"
 #include <QDebug>
 #include <QtNetwork/QTcpSocket>
 #include <QJsonObject>
@@ -14,7 +15,7 @@ Server::Server(QObject* parent)
 
 void Server::incomingConnection(qintptr socketDescriptor)
 {
-    socket = new QTcpSocket(this);
+    QTcpSocket* socket = new QTcpSocket(this);
 
     socket->setSocketDescriptor(socketDescriptor);
 
@@ -40,6 +41,8 @@ bool Server::startServer(int port)
 
 void Server::onReadyRead()
 {
+    QTcpSocket* socket = (QTcpSocket*)sender();
+
     QByteArray data = socket->readAll();
 
     qDebug() << "받은 데이터: " << data;
@@ -69,6 +72,7 @@ void Server::onReadyRead()
     else if(type == "withdraw")
     {
         qDebug() << "withdraw";
+        UserModule::withdraw(obj["id"].toString());
     }
 
     socket->write(QJsonDocument(response).toJson());
@@ -86,5 +90,6 @@ QJsonObject Server::onLogin(QJsonObject obj)
 void Server::onDisconnected()
 {
     qDebug() << "종료";
+    QTcpSocket* socket = (QTcpSocket*)sender();
     socket->deleteLater();
 }

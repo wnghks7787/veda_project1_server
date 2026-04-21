@@ -20,7 +20,6 @@ protected:
     void incomingConnection(qintptr socketDescriptor);
 
 private:
-    QTcpSocket* socket;
 
 private slots:
     void onReadyRead();
