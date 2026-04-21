@@ -18,6 +18,7 @@ add_executable(veda_project1_server
   server.h server.cpp
   login_module.h login_module.cpp
   user_module.h user_module.cpp
+
 )
 target_link_libraries(veda_project1_server PRIVATE Qt${QT_VERSION_MAJOR}::Core PRIVATE Qt6::Network)
 

@@ -8,5 +8,6 @@ int main(int argc, char *argv[])
     Server server;
     server.startServer(12345);
 
-    return QCoreApplication::exec();
+    // return QCoreApplication::exec();
+    return a.exec();
 }

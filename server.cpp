@@ -74,6 +74,21 @@ void Server::onReadyRead()
         qDebug() << "withdraw";
         UserModule::withdraw(obj["id"].toString());
     }
+    else if(type == "verifyId")
+    {
+        qDebug() << "verifyId";
+        bool res = UserModule::verifiedId(obj["id"].toString());
+
+        response["type"] = "verifyId";
+        if(res)
+        {
+            response["success"] = true;
+        }
+        else
+        {
+            response["success"] = false;
+        }
+    }
 
     socket->write(QJsonDocument(response).toJson());
 }
