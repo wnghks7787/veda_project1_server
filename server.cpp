@@ -89,6 +89,21 @@ void Server::onReadyRead()
             response["success"] = false;
         }
     }
+    else if(type == "signUp")
+    {
+        qDebug() << "signUp";
+        bool res = UserModule::signUp(obj["user"].toObject());
+
+        response["type"] = "signUp";
+        if(res)
+        {
+            response["success"] = true;
+        }
+        else
+        {
+            response["success"] = false;
+        }
+    }
 
     socket->write(QJsonDocument(response).toJson());
 }

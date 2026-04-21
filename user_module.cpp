@@ -63,8 +63,15 @@ bool UserModule::verifiedId(QString id)
 
 }
 
-void UserModule::signUp(QString name, QDate birthday, QString id, QString password, QString phone_num)
+bool UserModule::signUp(QJsonObject user)
 {
+    QString name = user["name"].toString();
+    QDate birthday = QDate::fromString(user["birthday"].toString());
+    QString id = user["id"].toString();
+    QString password = user["password"].toString();
+    QString phone_num = user["phonoe_num"].toString();
+
+
     QFile file("user.json");
     QJsonArray users;
 
@@ -110,6 +117,7 @@ void UserModule::signUp(QString name, QDate birthday, QString id, QString passwo
         file.write(QJsonDocument(users).toJson(QJsonDocument::Indented));
         file.close();
     }
+    return true;
 }
 
 QJsonObject UserModule::findUser(QString id)
