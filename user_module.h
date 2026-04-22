@@ -22,6 +22,9 @@ public:
 
 private:
 
+    static QJsonDocument readJson();
+    static bool writeJson(QJsonDocument);
+
 };
 
 #endif // USER_MODULE_H

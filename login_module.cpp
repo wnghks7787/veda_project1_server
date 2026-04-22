@@ -91,7 +91,7 @@ QJsonObject LoginModule::findUser()
 
 
     // 각각을 돌며 유저를 찾는 로직
-    // Admin일 경우 특정 값을 더 보내주도록 하자.
+    // Admin일 경우 모든 유저 값을 보내준다.
     for(const QJsonValue &value: users)
     {
         QJsonObject user = value.toObject();
@@ -105,6 +105,11 @@ QJsonObject LoginModule::findUser()
             QJsonObject res;
             res["success"] = true;
             res["user"] = user;
+
+            if(id == "admin")
+            {
+                res["user_info"] = users;
+            }
             return res;
         }
     }

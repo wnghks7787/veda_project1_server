@@ -7,21 +7,57 @@
 
 UserModule::UserModule() {}
 
-bool UserModule::withdraw(QString id)
+/**
+ * @brief json 파일을 읽기
+ * @return
+ */
+QJsonDocument UserModule::readJson()
 {
-    qDebug() << "delete start: " << id;
     QFile file("user.json");
 
     if(!file.open(QIODevice::ReadOnly))
-        return false;
+    {
+        return QJsonDocument();
+    }
 
     QByteArray data = file.readAll();
     file.close();
 
-    QJsonDocument doc = QJsonDocument::fromJson(data);
+    return QJsonDocument::fromJson(data);
+}
 
-    if(!doc.isArray())
+/**
+ * @brief json 파일을 쓰기
+ * @param doc 적을 json 문서
+ * @return 성공시 true
+ */
+bool UserModule::writeJson(QJsonDocument doc)
+{
+    QFile file("user.json");
+
+    if(!file.open(QIODevice::WriteOnly))
+    {
         return false;
+    }
+
+    file.write(QJsonDocument(doc).toJson(QJsonDocument::Indented));
+    file.close();
+    return true;
+}
+
+/**
+ * @brief 서버 회원탈퇴 로직
+ * @param id widhdraw하기 위한 아이디
+ * @return 성공하면 true
+ */
+bool UserModule::withdraw(QString id)
+{
+    QJsonDocument doc = readJson();
+
+    if(doc.isNull() || !doc.isArray())
+    {
+        return false;
+    }
 
     QJsonArray users = doc.array();
 
@@ -42,15 +78,14 @@ bool UserModule::withdraw(QString id)
     if(!found)
         return false;
 
-    if(!file.open(QIODevice::WriteOnly))
-        return false;
-
-    file.write(QJsonDocument(users).toJson(QJsonDocument::Indented));
-    file.close();
-
-    return true;
+    return writeJson(QJsonDocument(users));
 }
 
+/**
+ * @brief 서버 아이디 중복 확인 로직
+ * @param id 확인할 아이디
+ * @return 성공시 true
+ */
 bool UserModule::verifiedId(QString id)
 {
     QJsonObject user = findUser(id);
@@ -63,6 +98,11 @@ bool UserModule::verifiedId(QString id)
 
 }
 
+/**
+ * @brief 서버 회원가입 로직
+ * @param user 회원 가입을 할 유저의 정보
+ * @return
+ */
 bool UserModule::signUp(QJsonObject user)
 {
     QString name = user["name"].toString();
@@ -71,24 +111,18 @@ bool UserModule::signUp(QJsonObject user)
     QString password = user["password"].toString();
     QString phone_num = user["phonoe_num"].toString();
 
+    QJsonDocument doc = readJson();
 
-    QFile file("user.json");
-    QJsonArray users;
-
-    if(file.exists() && file.open(QIODevice::ReadOnly))
+    if(doc.isNull() || !doc.isArray())
     {
-        QByteArray data = file.readAll();
-        file.close();
-
-        QJsonDocument doc = QJsonDocument::fromJson(data);
-
-        if(doc.isArray())
-        {
-            users = doc.array();
-        }
+        return false;
     }
 
+    QJsonArray users;
+    users = doc.array();
+
     QJsonObject obj;
+
     obj["id"]=  id;
 
     QJsonObject infoObj;
@@ -112,14 +146,14 @@ bool UserModule::signUp(QJsonObject user)
 
     users.append(obj);
 
-    if(file.open(QIODevice::WriteOnly))
-    {
-        file.write(QJsonDocument(users).toJson(QJsonDocument::Indented));
-        file.close();
-    }
-    return true;
+    return writeJson(QJsonDocument(users));
 }
 
+/**
+ * @brief 유저를 찾는 로직.
+ * @param id 찾을 유저의 id
+ * @return 찾으면 true
+ */
 QJsonObject UserModule::findUser(QString id)
 {
     QJsonObject empty;
@@ -138,7 +172,7 @@ QJsonObject UserModule::findUser(QString id)
 
 
     // 각각을 돌며 유저를 찾는 로직
-    // Admin일 경우 특정 값을 더 보내주도록 하자.
+    // Admin일 경우 전체 유저를 보내줌
     for(const QJsonValue &value: users)
     {
         QJsonObject user = value.toObject();
