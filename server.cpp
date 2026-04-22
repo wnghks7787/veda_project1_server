@@ -63,6 +63,11 @@ void Server::onReadyRead()
         {
             response["success"] = true;
             response["user"] = login_info["user"];
+
+            if(response["user"].toObject()["id"].toString() == "admin")
+            {
+                response["users_info"] = login_info["users_info"];
+            }
         }
         else
         {

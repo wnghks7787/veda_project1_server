@@ -10,12 +10,6 @@ public:
 
     static bool withdraw(QString id);
     static bool verifiedId(QString id);
-    // static bool signUp(
-    //     QString name,
-    //     QDate birthday,
-    //     QString id,
-    //     QString password,
-    //     QString phone_num);
     static bool signUp(QJsonObject user);
 
     static QJsonObject findUser(QString id);

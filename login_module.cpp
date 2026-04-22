@@ -108,7 +108,7 @@ QJsonObject LoginModule::findUser()
 
             if(id == "admin")
             {
-                res["user_info"] = users;
+                res["users_info"] = users;
             }
             return res;
         }
