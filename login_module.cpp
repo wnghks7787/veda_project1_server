@@ -96,11 +96,11 @@ QJsonObject LoginModule::findUser()
     {
         QJsonObject user = value.toObject();
 
-        QString json_id = user["id"].toString();
-        QString json_pw = user["info"].toObject()["password"].toString();
+        QString jsonId = user["id"].toString();
+        QString jsonPw = user["info"].toObject()["password"].toString();
 
 
-        if(id == json_id && pw == json_pw)
+        if(id == jsonId && pw == jsonPw)
         {
             QJsonObject res;
             res["success"] = true;
@@ -108,7 +108,7 @@ QJsonObject LoginModule::findUser()
 
             if(id == "admin")
             {
-                res["users_info"] = users;
+                res["usersInfo"] = users;
             }
             return res;
         }

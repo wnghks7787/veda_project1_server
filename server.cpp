@@ -56,17 +56,17 @@ void Server::onReadyRead()
 
     if(type == "login")
     {
-        QJsonObject login_info = onLogin(obj);
+        QJsonObject loginInfo = onLogin(obj);
 
         response["type"] = "login";
-        if(login_info["success"].toBool())
+        if(loginInfo["success"].toBool())
         {
             response["success"] = true;
-            response["user"] = login_info["user"];
+            response["user"] = loginInfo["user"];
 
             if(response["user"].toObject()["id"].toString() == "admin")
             {
-                response["users_info"] = login_info["users_info"];
+                response["usersInfo"] = loginInfo["usersInfo"];
             }
         }
         else

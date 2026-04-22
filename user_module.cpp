@@ -109,7 +109,7 @@ bool UserModule::signUp(QJsonObject user)
     QDate birthday = QDate::fromString(user["birthday"].toString(), Qt::ISODate);
     QString id = user["id"].toString();
     QString password = user["password"].toString();
-    QString phone_num = user["phone_num"].toString();
+    QString phoneNum = user["phoneNum"].toString();
     QString note = user["note"].toString();
 
     QJsonDocument doc = readJson();
@@ -131,7 +131,7 @@ bool UserModule::signUp(QJsonObject user)
     infoObj["name"] = name;
     infoObj["birthday"] = birthday.toString("yyyy-MM-dd");
     infoObj["password"] = password;
-    infoObj["phone_num"] = phone_num;
+    infoObj["phoneNum"] = phoneNum;
     infoObj["age"] = QDate::currentDate().year() - birthday.year() + 1;
 
     obj["info"] = infoObj;
@@ -141,8 +141,8 @@ bool UserModule::signUp(QJsonObject user)
     attendanceObj["present"] = 0;
     attendanceObj["absent"] = 0;
     attendanceObj["late"] = 0;
-    attendanceObj["early_leave"] = 0;
-    attendanceObj["be_out"] = 0;
+    attendanceObj["earlyLeave"] = 0;
+    attendanceObj["beOut"] = 0;
 
     obj["attendance"] = attendanceObj;
 
@@ -216,11 +216,11 @@ QJsonObject UserModule::findUser(QString id)
     {
         QJsonObject user = value.toObject();
 
-        QString json_id = user["id"].toString();
-        QString json_pw = user["info"].toObject()["password"].toString();
+        QString jsonId = user["id"].toString();
+        QString jsonPw = user["info"].toObject()["password"].toString();
 
 
-        if(id == json_id)
+        if(id == jsonId)
         {
             QJsonObject res;
             res["success"] = true;
