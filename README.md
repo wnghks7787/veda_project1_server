@@ -19,6 +19,31 @@ make
 ./veda_project1_server
 ```
 
+### 관리자 로그인 정보 추가
+해당 Json 정보를 반드시 실행 서버(.exe파일)가 있는 폴더에 `user.json`으로 추가해주세요.
+
+```json
+[
+    {
+        "attendance": {
+            "absent": 0,
+            "be_out": 0,
+            "early_leave": 0,
+            "late": 0,
+            "present": 0
+        },
+        "id": "admin",
+        "info": {
+            "age": 2027,
+            "birthday": "",
+            "name": "admin",
+            "password": "admin",
+            "phone_num": ""
+        }
+    }
+]
+```
+
 ## 🛠️ 기술 스택
 
 - Qt 6.11.0
