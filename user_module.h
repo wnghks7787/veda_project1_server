@@ -11,6 +11,7 @@ public:
     static bool withdraw(QString id);
     static bool verifiedId(QString id);
     static bool signUp(QJsonObject user);
+    static bool editUser(QJsonObject user);
 
     static QJsonObject findUser(QString id);
 

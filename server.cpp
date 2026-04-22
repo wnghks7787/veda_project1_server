@@ -109,6 +109,21 @@ void Server::onReadyRead()
             response["success"] = false;
         }
     }
+    else if(type == "editUser")
+    {
+        qDebug() << "editUser";
+        bool res = UserModule::editUser(obj["user"].toObject());
+
+        response["type"] = "editUser";
+        if(res)
+        {
+            response["success"] = true;
+        }
+        else
+        {
+            response["success"] = false;
+        }
+    }
 
     socket->write(QJsonDocument(response).toJson());
 }

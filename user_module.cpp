@@ -106,10 +106,10 @@ bool UserModule::verifiedId(QString id)
 bool UserModule::signUp(QJsonObject user)
 {
     QString name = user["name"].toString();
-    QDate birthday = QDate::fromString(user["birthday"].toString());
+    QDate birthday = QDate::fromString(user["birthday"].toString(), Qt::ISODate);
     QString id = user["id"].toString();
     QString password = user["password"].toString();
-    QString phone_num = user["phonoe_num"].toString();
+    QString phone_num = user["phone_num"].toString();
 
     QJsonDocument doc = readJson();
 
@@ -145,6 +145,43 @@ bool UserModule::signUp(QJsonObject user)
     obj["attendance"] = attendanceObj;
 
     users.append(obj);
+
+    return writeJson(QJsonDocument(users));
+}
+
+/**
+ * @brief 서버 유저 정보 수정 로직
+ * @param user 수정될 유저 정보
+ * @return 성공시 true
+ */
+bool UserModule::editUser(QJsonObject updatedUser)
+{
+    QJsonDocument doc = readJson();
+
+    if(doc.isNull() || !doc.isArray())
+    {
+        return false;
+    }
+
+    QJsonArray users = doc.array();
+    QString targetId = updatedUser["id"].toString();
+    bool found = false;
+
+    for(int i = 0; i < users.size(); i++)
+    {
+        QJsonObject user = users[i].toObject();
+        if(user["id"].toString() == targetId)
+        {
+            users[i] = updatedUser;
+            found = true;
+            break;
+        }
+    }
+
+    if(!found)
+    {
+        return false;
+    }
 
     return writeJson(QJsonDocument(users));
 }
