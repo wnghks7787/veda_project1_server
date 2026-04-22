@@ -110,6 +110,7 @@ bool UserModule::signUp(QJsonObject user)
     QString id = user["id"].toString();
     QString password = user["password"].toString();
     QString phone_num = user["phone_num"].toString();
+    QString note = user["note"].toString();
 
     QJsonDocument doc = readJson();
 
@@ -124,6 +125,7 @@ bool UserModule::signUp(QJsonObject user)
     QJsonObject obj;
 
     obj["id"]=  id;
+    obj["note"] = note;
 
     QJsonObject infoObj;
     infoObj["name"] = name;
@@ -172,7 +174,7 @@ bool UserModule::editUser(QJsonObject updatedUser)
         QJsonObject user = users[i].toObject();
         if(user["id"].toString() == targetId)
         {
-            users[i] = updatedUser;
+            users.replace(i, updatedUser);
             found = true;
             break;
         }
